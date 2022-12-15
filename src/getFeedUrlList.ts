@@ -15,5 +15,5 @@ export const getFeedUrlList = async () => {
     (result: TODO) => result.properties.Enable.checkbox
   )
 
-  return feedUrlList.map((result: TODO) => result.properties.Link.url as string)
+  return feedUrlList.map((result: TODO) => [result.properties.Link.url as string, result.properties.Title.title[0] as string, result.properties['Last Run'], result.id])
 }

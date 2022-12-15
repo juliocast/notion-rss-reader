@@ -8,14 +8,15 @@ type TODO = any
 export const addFeedItems = async (
   newFeedItems: {
     [key: string]: TODO
-  }[]
+  }[],
+  feedRepo: string
 ) => {
   const notion = new Client({ auth: process.env.NOTION_KEY })
   const databaseId = process.env.NOTION_READER_DATABASE_ID || ''
 
   newFeedItems.forEach(async (item) => {
     const { title, link, enclosure, pubDate } = item
-    const domain = link?.match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/)
+    //const domain = link?.match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/)
 
     const properties: TODO = {
       Title: {
@@ -30,19 +31,15 @@ export const addFeedItems = async (
       URL: {
         url: link,
       },
-      Domain: {
+      Repository: {
         select: {
-          name: domain ? domain[1] : null,
+          name: feedRepo,
         },
       },
       'Created At': {
-        rich_text: [
-          {
-            text: {
-              content: pubDate,
-            },
-          },
-        ],
+        date: {
+          start: pubDate
+        },
       },
     }
 
